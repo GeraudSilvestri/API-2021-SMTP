@@ -1,5 +1,3 @@
-package ch.heigvd.api.calc;
-
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +18,7 @@ public class Client {
     public static void main(String[] args) {
         final int SERVER_PORT = 4269;
         final String SERVER_HOST= "127.0.0.1";
+        final String ENCODING = "UTF-8";
 
         // Log output on a single line
         System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s%6$s%n");
@@ -29,16 +28,6 @@ public class Client {
         BufferedReader serverResponse = null;
         BufferedWriter serverRequest = null;
 
-        /* TODO: Implement the client here, according to your specification
-         *   The client has to do the following:
-         *   - connect to the server
-         *   - initialize the dialog with the server according to your specification
-         *   - In a loop:
-         *     - read the command from the user on stdin (already created)
-         *     - send the command to the server
-         *     - read the response line from the server (using BufferedReader.readLine)
-         */
-
         try{
             // Initialise la connection avec le serveur
             clientSocket = new Socket(SERVER_HOST, SERVER_PORT);
@@ -47,14 +36,14 @@ public class Client {
             stdin = new BufferedReader(new InputStreamReader(System.in));
 
             // Récupérateur des réponses du serveur
-            serverResponse = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            serverResponse = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), ENCODING));
 
             // Envoyeur de requêtes au serveur
-            serverRequest = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+            serverRequest = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream(), ENCODING));
 
             boolean connectionClosed = false;
 
-            do{
+            /*do{
                 String request = stdin.readLine() + "\r\n";
                 serverRequest.write(request);
                 serverRequest.flush();
@@ -73,7 +62,7 @@ public class Client {
                         System.out.println("La commande est erronée.");
                         break;
                 }
-            }while(!connectionClosed);
+            }while(!connectionClosed);*/
         }
         catch (IOException ex) {
             LOG.log(Level.SEVERE, ex.toString(), ex);
