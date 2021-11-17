@@ -17,7 +17,6 @@ public class ConfigurationManager {
     private final List<Person> victims = new ArrayList<>();
     private final List<String> messages = new ArrayList<>();
     private List<Person> witnessesToCc;
-    private int smtpServerPort;
     private int numberOfGroup;
     private int groupNum = 0;
     private final int GROUP_MIN_SIZE = 3;
@@ -54,34 +53,23 @@ public class ConfigurationManager {
         this.witnessesToCc = witnessesToCc;
     }
 
-    ConfigurationManager(){
-
-    }
-
     public int getNumberOfGroup() {
         return numberOfGroup;
     }
 
-    /**
-     * Main function to run client
-     *
-     * @param args no args required
-     */
-
-    public static void main(String[] args) throws IOException {
+    public ConfigurationManager() throws IOException {
         BufferedReader victimsFile = null;
         BufferedReader messagesFile = null;
         Vector<Person> victims = new Vector<>();
         Vector<String> messages = new Vector<>();
 
-        int numberGroup = Integer.parseInt(args[0]);
         try{
             victimsFile = new BufferedReader(new FileReader("config/victims.utf8"));
             messagesFile = new BufferedReader(new FileReader("config/messages.utf8"));
 
             String line;
             while((line = victimsFile.readLine()) != null){
-                victims.add(line + "\r\n");
+                //victims.add(line + "\r\n");
             }
             while((line = messagesFile.readLine()) != null){
                 messages.add(line + "\r\n");
