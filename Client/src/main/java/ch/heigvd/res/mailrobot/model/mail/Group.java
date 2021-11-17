@@ -1,4 +1,4 @@
-package ch.heigvd.res.mailrobot.model.mail;
+package ch.heigvd.res.mailrobot.model;
 
 public class Group {
 }
