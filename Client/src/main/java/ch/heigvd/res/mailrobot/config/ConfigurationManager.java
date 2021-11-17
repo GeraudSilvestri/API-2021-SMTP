@@ -63,31 +63,22 @@ public class ConfigurationManager {
         Vector<Person> victims = new Vector<>();
         Vector<String> messages = new Vector<>();
 
-        try{
-            victimsFile = new BufferedReader(new FileReader("config/victims.utf8"));
-            messagesFile = new BufferedReader(new FileReader("config/messages.utf8"));
 
-            String line;
-            while((line = victimsFile.readLine()) != null){
-                //victims.add(line + "\r\n");
-            }
-            while((line = messagesFile.readLine()) != null){
-                messages.add(line + "\r\n");
-            }
+        victimsFile = new BufferedReader(new FileReader("../ressources/victims.utf8"));
+        messagesFile = new BufferedReader(new FileReader("../ressources/messages.utf8"));
 
-        }catch(IOException e){
-            System.out.println("Erreur survenue lors de la lecture des fichiers victims et messages");
+        String line;
+        Person p;
+        while((line = victimsFile.readLine()) != null){
+            // TODO prenom.nom@...
+            p = new Person("", "", line + "\r\n");
+            victims.add(p);
         }
-        finally{
-            try{
-                if(victimsFile != null)
-                    victimsFile.close();
-                if(messagesFile != null)
-                    messagesFile.close();
-            }
-            catch(IOException e){
-                System.out.println("Erreur survenue lors de la fermeture des fichiers victims et messages");
-            }
+        while((line = messagesFile.readLine()) != null){
+            messages.add(line + "\r\n");
         }
+
+        victimsFile.close();
+        messagesFile.close();
     }
 }
