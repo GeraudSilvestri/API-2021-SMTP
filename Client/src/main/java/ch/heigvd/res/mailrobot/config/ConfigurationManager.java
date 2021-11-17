@@ -5,7 +5,6 @@ import ch.heigvd.res.mailrobot.model.mail.Person;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Vector;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
@@ -14,10 +13,14 @@ public class ConfigurationManager {
     private static final Logger LOG = Logger.getLogger(FileHandler.class.getName());
 
     private String smtpServerAddress;
-    private int smtpServerPOrt;
+    private int smtpServerPort;
     private final List<Person> victims = new ArrayList<>();
     private final List<String> messages = new ArrayList<>();
     private List<Person> witnessesToCc;
+    private int smtpServerPort;
+    private int numberOfGroup;
+    private int groupNum = 0;
+    private final int GROUP_MIN_SIZE = 3;
 
     public String getSmtpServerAddress() {
         return smtpServerAddress;
@@ -27,12 +30,12 @@ public class ConfigurationManager {
         this.smtpServerAddress = smtpServerAddress;
     }
 
-    public int getSmtpServerPOrt() {
-        return smtpServerPOrt;
+    public int getSmtpServerPort() {
+        return smtpServerPort;
     }
 
-    public void setSmtpServerPOrt(int smtpServerPOrt) {
-        this.smtpServerPOrt = smtpServerPOrt;
+    public void setSmtpServerPort(int smtpServerPort) {
+        this.smtpServerPort = smtpServerPort;
     }
 
     public List<Person> getVictims() {
@@ -51,14 +54,13 @@ public class ConfigurationManager {
         this.witnessesToCc = witnessesToCc;
     }
 
-    /*
-    private void createGroupe(int groupNum, Vector<String> victims){
-        if(victims.size() < groupNum * 3 || groupNum <= 0){
-            return;
-        }else{
-            Random rand = new Random();
-        }
-    }*/
+    ConfigurationManager(){
+
+    }
+
+    public int getNumberOfGroup() {
+        return numberOfGroup;
+    }
 
     /**
      * Main function to run client
@@ -67,9 +69,9 @@ public class ConfigurationManager {
      */
 
     public static void main(String[] args) throws IOException {
-        /*BufferedReader victimsFile = null;
+        BufferedReader victimsFile = null;
         BufferedReader messagesFile = null;
-        Vector<String> victims = new Vector<>();
+        Vector<Person> victims = new Vector<>();
         Vector<String> messages = new Vector<>();
 
         int numberGroup = Integer.parseInt(args[0]);
@@ -98,6 +100,6 @@ public class ConfigurationManager {
             catch(IOException e){
                 System.out.println("Erreur survenue lors de la fermeture des fichiers victims et messages");
             }
-        }*/
+        }
     }
 }
