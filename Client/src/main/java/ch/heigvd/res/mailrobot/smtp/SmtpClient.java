@@ -1,3 +1,5 @@
+package ch.heigvd.res.mailrobot.smtp;
+
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -6,9 +8,9 @@ import java.net.Socket;
 /**
  * Calculator client implementation
  */
-public class Client {
+public class SmtpClient {
 
-    private static final Logger LOG = Logger.getLogger(Client.class.getName());
+    private static final Logger LOG = Logger.getLogger(SmtpClient.class.getName());
 
     /**
      * Main function to run client
