@@ -1,6 +1,10 @@
 package ch.heigvd.res.mailrobot.config;
 
+import ch.heigvd.res.mailrobot.model.mail.Person;
+
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 import java.util.logging.FileHandler;
@@ -11,9 +15,9 @@ public class ConfigurationManager {
 
     private String smtpServerAddress;
     private int smtpServerPOrt;
-    private final list<Person> victims;
-    private final list<String> messages;
-    private list<Person> witnessesToCc;
+    private final List<Person> victims = new ArrayList<>();
+    private final List<String> messages = new ArrayList<>();
+    private List<Person> witnessesToCc;
 
     public String getSmtpServerAddress() {
         return smtpServerAddress;
@@ -31,19 +35,19 @@ public class ConfigurationManager {
         this.smtpServerPOrt = smtpServerPOrt;
     }
 
-    public list<Person> getVictims() {
+    public List<Person> getVictims() {
         return victims;
     }
 
-    public list<String> getMessages() {
+    public List<String> getMessages() {
         return messages;
     }
 
-    public list<Person> getWitnessesToCc() {
+    public List<Person> getWitnessesToCc() {
         return witnessesToCc;
     }
 
-    public void setWitnessesToCc(list<Person> witnessesToCc) {
+    public void setWitnessesToCc(List<Person> witnessesToCc) {
         this.witnessesToCc = witnessesToCc;
     }
 
