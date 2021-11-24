@@ -4,8 +4,9 @@ import ch.heigvd.res.mailrobot.model.mail.Person;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
+import java.util.Properties;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,9 +17,11 @@ public class ConfigurationManager {
     private int smtpServerPort;
     private final List<Person> victims = new ArrayList<>();
     private final List<String> messages = new ArrayList<>();
-    private List<Person> witnessesToCc;
+    private List<Person> witnessesToCc = new ArrayList<>();;
+    private Properties prop;
+    private String smtpAddress;
+    private int smtpPort;
     private int numberOfGroup;
-    private int groupNum = 0;
     private final int GROUP_MIN_SIZE = 3;
 
     public String getSmtpServerAddress() {
@@ -118,8 +121,54 @@ public class ConfigurationManager {
         }
     }
 
+    private void countGroups(int numberLine){
+    }
+
+    private InputStream getRessourceAsStream(String fileName) throws IOException {
+        InputStream in = ConfigurationManager.class.getResourceAsStream(fileName);
+        if (in == null)
+            throw new IOException("File " + fileName + " not found.");
+
+        return in;
+    }
+
+    private void storeConfiguration(String filename){
+        InputStream config = null;
+        try{
+
+            config = getRessourceAsStream(filename);
+
+            prop.load(config);
+
+            smtpAddress = prop.getProperty("smtpServerAddress");
+            numberOfGroup = Integer.parseInt(prop.getProperty("numberOfGroups"));
+            smtpPort = Integer.parseInt(prop.getProperty("smtpServerPort"));
+
+            for(String s : prop.getProperty("witnessesToCC").split("\\,")){
+                String[] dotSeparation = s.split("\\.");
+                String atSeparation = dotSeparation[1].split("\\@")[0];
+                witnessesToCc.add(new Person(dotSeparation[0], atSeparation, s + "\r\n"));
+            }
+        }
+        catch(IOException e){
+            LOG.log(Level.SEVERE, e.toString());
+        }
+        finally{
+            try{
+                if(config != null)
+                    config.close();
+            }
+            catch(IOException e){
+                LOG.log(Level.SEVERE, e.toString());
+            }
+        }
+    }
+
     public ConfigurationManager() throws IOException {
+        prop = new Properties();
+
         storeVictims("src/main/ressources/victims.utf8");
         storeMessages("src/main/ressources/messages.utf8");
+        storeConfiguration("/config.properties");
     }
 }
