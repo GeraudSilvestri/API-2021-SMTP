@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ConfigurationManager {
     private static final Logger LOG = Logger.getLogger(FileHandler.class.getName());
-
     private String smtpServerAddress;
     private int smtpServerPort;
     private final List<Person> victims = new ArrayList<>();
@@ -57,28 +57,69 @@ public class ConfigurationManager {
         return numberOfGroup;
     }
 
-    public ConfigurationManager() throws IOException {
-        BufferedReader victimsFile = null;
+    private void storeMessages(String filename){
         BufferedReader messagesFile = null;
-        Vector<Person> victims = new Vector<>();
-        Vector<String> messages = new Vector<>();
 
+        try{
+            String line;
+            StringBuilder message = new StringBuilder();
+            messagesFile = new BufferedReader(new FileReader(filename));
+            while((line = messagesFile.readLine()) != null){
+                if(line.equals("==")){
+                    messages.add(message.toString());
+                    message.setLength(0);
+                }else{
+                    message.append(line).append("\r\n");
+                }
+            }
 
-        victimsFile = new BufferedReader(new FileReader("../ressources/victims.utf8"));
-        messagesFile = new BufferedReader(new FileReader("../ressources/messages.utf8"));
-
-        String line;
-        Person p;
-        while((line = victimsFile.readLine()) != null){
-            // TODO prenom.nom@...
-            p = new Person("", "", line + "\r\n");
-            victims.add(p);
+            if(message.length() != 0){
+                messages.add(message.toString());
+            }
         }
-        while((line = messagesFile.readLine()) != null){
-            messages.add(line + "\r\n");
+        catch(IOException e){
+            LOG.log(Level.SEVERE, e.toString());
         }
+        finally{
+            try{
+                if(messagesFile != null)
+                    messagesFile.close();
+            }
+            catch(IOException e){
+                LOG.log(Level.SEVERE, e.toString());
+            }
+        }
+    }
 
-        victimsFile.close();
-        messagesFile.close();
+    private void storeVictims(String filename) {
+        BufferedReader victimsFile = null;
+
+        try{
+            victimsFile = new BufferedReader(new FileReader(filename));
+
+            String line;
+            while((line = victimsFile.readLine()) != null){
+                String[] dotSeparation = line.split("\\.");
+                String atSeparation = dotSeparation[1].split("\\@")[0];
+                victims.add(new Person(dotSeparation[0], atSeparation, line + "\r\n"));
+            }
+        }
+        catch(IOException e){
+            LOG.log(Level.SEVERE, e.toString());
+        }
+        finally{
+            try{
+                if(victimsFile != null)
+                    victimsFile.close();
+            }
+            catch(IOException e){
+                LOG.log(Level.SEVERE, e.toString());
+            }
+        }
+    }
+
+    public ConfigurationManager() throws IOException {
+        storeVictims("src/main/ressources/victims.utf8");
+        storeMessages("src/main/ressources/messages.utf8");
     }
 }

@@ -14,7 +14,7 @@ public class SmtpClient {
     private static String host;
     ConfigurationManager config = new ConfigurationManager();
 
-    public SmtpClient(){
+    public SmtpClient() throws IOException {
         port = config.getSmtpServerPort();
         host = config.getSmtpServerAddress();
 
