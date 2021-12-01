@@ -10,4 +10,16 @@ public class Person {
         this.lastname = lastname;
         this.address = address;
     }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public String getAddress() {
+        return address;
+    }
 }

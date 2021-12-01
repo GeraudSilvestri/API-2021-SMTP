@@ -17,7 +17,7 @@ public class ConfigurationManager {
     private int smtpServerPort;
     private final List<Person> victims = new ArrayList<>();
     private final List<String> messages = new ArrayList<>();
-    private List<Person> witnessesToCc = new ArrayList<>();;
+    private Person witnessesToCc;
     private Properties prop;
     private String smtpAddress;
     private int smtpPort;
@@ -48,11 +48,11 @@ public class ConfigurationManager {
         return messages;
     }
 
-    public List<Person> getWitnessesToCc() {
+    public Person getWitnessesToCc() {
         return witnessesToCc;
     }
 
-    public void setWitnessesToCc(List<Person> witnessesToCc) {
+    public void setWitnessesToCc(Person witnessesToCc) {
         this.witnessesToCc = witnessesToCc;
     }
 
@@ -144,11 +144,10 @@ public class ConfigurationManager {
             numberOfGroup = Integer.parseInt(prop.getProperty("numberOfGroups"));
             smtpPort = Integer.parseInt(prop.getProperty("smtpServerPort"));
 
-            for(String s : prop.getProperty("witnessesToCC").split("\\,")){
-                String[] dotSeparation = s.split("\\.");
-                String atSeparation = dotSeparation[1].split("\\@")[0];
-                witnessesToCc.add(new Person(dotSeparation[0], atSeparation, s + "\r\n"));
-            }
+            String s = prop.getProperty("witnessesToCC");
+            String[] dotSeparation = s.split("\\.");
+            String atSeparation = dotSeparation[1].split("\\@")[0];
+            witnessesToCc = new Person(dotSeparation[0], atSeparation, s);
         }
         catch(IOException e){
             LOG.log(Level.SEVERE, e.toString());
