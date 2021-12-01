@@ -164,8 +164,8 @@ public class ConfigurationManager {
     public ConfigurationManager() throws IOException {
         prop = new Properties();
 
-        storeVictims("src/main/ressources/victims.utf8");
-        storeMessages("src/main/ressources/messages.utf8");
+        storeVictims("src/main/resources/victims.utf8");
+        storeMessages("src/main/resources/messages.utf8");
         storeConfiguration("/config.properties");
     }
 }
