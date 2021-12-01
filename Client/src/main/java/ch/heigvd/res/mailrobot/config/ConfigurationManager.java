@@ -51,7 +51,7 @@ public class ConfigurationManager {
         try{
             String line;
             StringBuilder message = new StringBuilder();
-            messagesFile = new BufferedReader(new FileReader("src/main/ressources/messages.utf8"));
+            messagesFile = new BufferedReader(new FileReader("src/main/resources/messages.utf8"));
             while((line = messagesFile.readLine()) != null){
                 if(line.equals("==")){
                     messages.add(message.toString());
@@ -83,7 +83,7 @@ public class ConfigurationManager {
         BufferedReader victimsFile = null;
 
         try{
-            victimsFile = new BufferedReader(new FileReader("src/main/ressources/victims.utf8"));
+            victimsFile = new BufferedReader(new FileReader("src/main/resources/victims.utf8"));
 
             String line;
             while((line = victimsFile.readLine()) != null){
