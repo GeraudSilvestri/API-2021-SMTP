@@ -2,9 +2,11 @@ package ch.heigvd.res.mailrobot.config;
 
 import ch.heigvd.res.mailrobot.model.mail.Person;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.FileHandler;
@@ -18,24 +20,15 @@ public class ConfigurationManager {
     private final List<Person> victims = new ArrayList<>();
     private final List<String> messages = new ArrayList<>();
     private Person witnessesToCc;
-    private Properties prop;
+    private final Properties prop;
     private int numberOfGroup;
-    private final int GROUP_MIN_SIZE = 3;
 
     public String getSmtpServerAddress() {
         return smtpServerAddress;
     }
 
-    public void setSmtpServerAddress(String smtpServerAddress) {
-        this.smtpServerAddress = smtpServerAddress;
-    }
-
     public int getSmtpServerPort() {
         return smtpServerPort;
-    }
-
-    public void setSmtpServerPort(int smtpServerPort) {
-        this.smtpServerPort = smtpServerPort;
     }
 
     public List<Person> getVictims() {
@@ -50,21 +43,17 @@ public class ConfigurationManager {
         return witnessesToCc;
     }
 
-    public void setWitnessesToCc(Person witnessesToCc) {
-        this.witnessesToCc = witnessesToCc;
-    }
-
     public int getNumberOfGroup() {
         return numberOfGroup;
     }
 
-    private void storeMessages(String filename){
+    private void storeMessages(){
         BufferedReader messagesFile = null;
 
         try{
             String line;
             StringBuilder message = new StringBuilder();
-            messagesFile = new BufferedReader(new FileReader(filename));
+            messagesFile = new BufferedReader(new FileReader("src/main/ressources/messages.utf8"));
             while((line = messagesFile.readLine()) != null){
                 if(line.equals("==")){
                     messages.add(message.toString());
@@ -92,11 +81,11 @@ public class ConfigurationManager {
         }
     }
 
-    private void storeVictims(String filename) {
+    private void storeVictims() {
         BufferedReader victimsFile = null;
 
         try{
-            victimsFile = new BufferedReader(new FileReader(filename));
+            victimsFile = new BufferedReader(new FileReader("src/main/ressources/victims.utf8"));
 
             String line;
             while((line = victimsFile.readLine()) != null){
@@ -119,22 +108,19 @@ public class ConfigurationManager {
         }
     }
 
-    private void countGroups(int numberLine){
-    }
-
-    private InputStream getRessourceAsStream(String fileName) throws IOException {
-        InputStream in = ConfigurationManager.class.getResourceAsStream(fileName);
+    private InputStream getRessourceAsStream() throws IOException {
+        InputStream in = ConfigurationManager.class.getResourceAsStream("/config.properties");
         if (in == null)
-            throw new IOException("File " + fileName + " not found.");
+            throw new IOException("File " + "/config.properties" + " not found.");
 
         return in;
     }
 
-    private void storeConfiguration(String filename){
+    private void storeConfiguration(){
         InputStream config = null;
         try{
 
-            config = getRessourceAsStream(filename);
+            config = getRessourceAsStream();
 
             prop.load(config);
 
@@ -161,11 +147,11 @@ public class ConfigurationManager {
         }
     }
 
-    public ConfigurationManager() throws IOException {
+    public ConfigurationManager() {
         prop = new Properties();
 
-        storeVictims("src/main/ressources/victims.utf8");
-        storeMessages("src/main/ressources/messages.utf8");
-        storeConfiguration("/config.properties");
+        storeVictims();
+        storeMessages();
+        storeConfiguration();
     }
 }

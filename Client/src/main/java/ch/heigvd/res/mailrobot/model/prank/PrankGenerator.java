@@ -32,7 +32,7 @@ public class PrankGenerator {
      */
     public List<Prank> generate(){
         List<String> messages = config.getMessages();
-        List<Prank> pranks = new ArrayList<Prank>();
+        List<Prank> pranks = new ArrayList<>();
         if(generateGroups()) {
             String message;
             int temp;
@@ -58,7 +58,7 @@ public class PrankGenerator {
         if(groupSize >= MIN_GROUP_SIZE) {
             for (int i = 0; i < numGroups; ++i) {
                 Group temp = new Group();
-                for (int j = 0; j < +(rest-- > 0 ? 1 : 0); ++j) {
+                for (int j = 0; j < (rest-- > 0 ? 1 : 0); ++j) {
                     temp.addMember(victims.get(j + i));
                 }
                 groups.add(temp);

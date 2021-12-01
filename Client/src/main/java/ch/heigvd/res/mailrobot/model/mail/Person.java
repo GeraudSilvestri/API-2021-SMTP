@@ -1,9 +1,9 @@
 package ch.heigvd.res.mailrobot.model.mail;
 
 public class Person {
-    private String firstname;
-    private String lastname;
-    private String address;
+    private final String firstname;
+    private final String lastname;
+    private final String address;
 
     public Person(String firstname, String lastname, String address) {
         this.firstname = firstname;

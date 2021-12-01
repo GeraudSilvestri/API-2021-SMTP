@@ -7,30 +7,27 @@ import ch.heigvd.res.mailrobot.model.prank.Prank;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SmtpClient {
     private final static Logger LOG = Logger.getLogger(SmtpClient.class.getName());
-    private static int port;
-    private static String host;
-    private List<Prank> pranks = new ArrayList<>();
+    private final List<Prank> pranks;
     ConfigurationManager config = new ConfigurationManager();
 
-    public SmtpClient(List<Prank> pranks) throws IOException {
+    public SmtpClient(List<Prank> pranks) {
         this.pranks = pranks;
     }
 
     public boolean checkResponse(String response, String attendu){
-        return response != null && response.startsWith(attendu);
+        return response == null || !response.startsWith(attendu);
     }
 
     public int start(){
         String response;
-        port = config.getSmtpServerPort();
-        host = config.getSmtpServerAddress();
+        int port = config.getSmtpServerPort();
+        String host = config.getSmtpServerAddress();
 
         System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s%6$s%n");
 
@@ -46,7 +43,7 @@ public class SmtpClient {
 
             LOG.log(Level.INFO, "Connected to" + clientSocket);
 
-            if (!checkResponse(response = in.readLine(), "250")) {
+            if (checkResponse(response = in.readLine(), "250")) {
                 LOG.log(Level.SEVERE, "Réponse attendue : 250-..., recue " + response);
                 return -1;
             }
@@ -56,7 +53,7 @@ public class SmtpClient {
                 out.flush();
 
                 while ((response = in.readLine()) != null && !response.startsWith("250 ")) {
-                    if (!checkResponse(response, "250")) {
+                    if (checkResponse(response, "250")) {
                         LOG.log(Level.SEVERE, "Réponse attendue : 250-..., recue " + response);
                         return -1;
                     }
@@ -70,7 +67,7 @@ public class SmtpClient {
                     out.write("RCPT TO:<" + pers.getAddress() + ">\n");
                     out.flush();
 
-                    if (!checkResponse(response = in.readLine(), "250 ")) {
+                    if (checkResponse(response = in.readLine(), "250 ")) {
                         LOG.log(Level.SEVERE, "Réponse attendue : 250 OK, recue " + response);
                         return -1;
                     }
@@ -80,7 +77,7 @@ public class SmtpClient {
                 out.write("DATA\n");
                 out.flush();
 
-                if(!checkResponse(response = in.readLine(), "354 ")){
+                if(checkResponse(response = in.readLine(), "354 ")){
                     LOG.log(Level.SEVERE, "Réponse attendue : 354 , recue " + response);
                     return -1;
                 }
@@ -90,7 +87,7 @@ public class SmtpClient {
                 out.write(writeContent(p));
                 out.flush();
 
-                if(!checkResponse(response = in.readLine(), "250 ")){
+                if(checkResponse(response = in.readLine(), "250 ")){
                     LOG.log(Level.SEVERE, "Réponse attendue : 250 , recue " + response);
                     return -1;
                 }

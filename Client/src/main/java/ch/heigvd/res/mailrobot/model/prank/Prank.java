@@ -2,14 +2,13 @@ package ch.heigvd.res.mailrobot.model.prank;
 
 import ch.heigvd.res.mailrobot.model.mail.Person;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Prank {
-    private Person sender;
-    private List<Person> victims = new ArrayList<>();
-    private Person witness;
-    private String message;
+    private final Person sender;
+    private final List<Person> victims;
+    private final Person witness;
+    private final String message;
 
     public Person getSender() {
         return sender;
