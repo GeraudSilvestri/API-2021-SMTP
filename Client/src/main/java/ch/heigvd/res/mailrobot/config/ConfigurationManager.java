@@ -19,8 +19,6 @@ public class ConfigurationManager {
     private final List<String> messages = new ArrayList<>();
     private Person witnessesToCc;
     private Properties prop;
-    private String smtpAddress;
-    private int smtpPort;
     private int numberOfGroup;
     private final int GROUP_MIN_SIZE = 3;
 
@@ -140,9 +138,9 @@ public class ConfigurationManager {
 
             prop.load(config);
 
-            smtpAddress = prop.getProperty("smtpServerAddress");
+            smtpServerAddress = prop.getProperty("smtpServerAddress");
             numberOfGroup = Integer.parseInt(prop.getProperty("numberOfGroups"));
-            smtpPort = Integer.parseInt(prop.getProperty("smtpServerPort"));
+            smtpServerPort = Integer.parseInt(prop.getProperty("smtpServerPort"));
 
             String s = prop.getProperty("witnessesToCC");
             String[] dotSeparation = s.split("\\.");
