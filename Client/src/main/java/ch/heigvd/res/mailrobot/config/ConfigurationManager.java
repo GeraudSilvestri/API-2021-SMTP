@@ -106,7 +106,7 @@ public class ConfigurationManager {
         }
     }
 
-    private InputStream getRessourceAsStream() throws IOException {
+    private InputStream getResourceAsStream() throws IOException {
         InputStream in = ConfigurationManager.class.getResourceAsStream("/config.properties");
         if (in == null)
             throw new IOException("File " + "/config.properties" + " not found.");
@@ -118,7 +118,7 @@ public class ConfigurationManager {
         InputStream config = null;
         try{
 
-            config = getRessourceAsStream();
+            config = getResourceAsStream();
 
             prop.load(config);
 
