@@ -14,6 +14,9 @@ import java.util.logging.Logger;
 public class SmtpClient {
     private final static Logger LOG = Logger.getLogger(SmtpClient.class.getName());
     private final List<Prank> pranks;
+    private final String CRLF = "\r\n";
+    BufferedReader in = null;
+    BufferedWriter out = null;
     ConfigurationManager config = new ConfigurationManager();
 
     public SmtpClient(List<Prank> pranks) {
@@ -32,8 +35,6 @@ public class SmtpClient {
         System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s%6$s%n");
 
         Socket clientSocket = null;
-        BufferedReader in = null;
-        BufferedWriter out = null;
 
         try {
             clientSocket = new Socket(host, port);
@@ -43,16 +44,19 @@ public class SmtpClient {
 
             LOG.log(Level.INFO, "Connected to" + clientSocket);
 
-            if (checkResponse(response = in.readLine(), "250")) {
-                LOG.log(Level.SEVERE, "Réponse attendue : 250-..., recue " + response);
+            if (checkResponse(response = in.readLine(), "220 ")) {
+                LOG.log(Level.SEVERE, "Réponse attendue : 220 , recue " + response);
                 return -1;
             }
+            System.out.println(response);
 
             for (Prank p : pranks) {
-                out.write("EHLO heig-vd.com" + '\n');
-                out.flush();
+                send("EHLO heig-vd.com" + CRLF);
 
-                while ((response = in.readLine()) != null && !response.startsWith("250 ")) {
+                while ((response = in.readLine()) != null) {
+                    if(response.startsWith("250 ")){
+                        break;
+                    }
                     if (checkResponse(response, "250")) {
                         LOG.log(Level.SEVERE, "Réponse attendue : 250-..., recue " + response);
                         return -1;
@@ -61,11 +65,10 @@ public class SmtpClient {
                 }
                 System.out.println(response);
 
-                out.write("MAIL FROM:<" + p.getSender().getAddress() + ">\n");
-                out.flush();
+                send("MAIL FROM:<" + p.getSender().getAddress() + ">" + CRLF);
+
                 for (Person pers : p.getVictims()) {
-                    out.write("RCPT TO:<" + pers.getAddress() + ">\n");
-                    out.flush();
+                    send("RCPT TO:<" + pers.getAddress() + ">"+ CRLF);
 
                     if (checkResponse(response = in.readLine(), "250 ")) {
                         LOG.log(Level.SEVERE, "Réponse attendue : 250 OK, recue " + response);
@@ -74,8 +77,7 @@ public class SmtpClient {
                     System.out.println(response);
                 }
 
-                out.write("DATA\n");
-                out.flush();
+                send("DATA"+CRLF);
 
                 if(checkResponse(response = in.readLine(), "354 ")){
                     LOG.log(Level.SEVERE, "Réponse attendue : 354 , recue " + response);
@@ -84,8 +86,7 @@ public class SmtpClient {
 
                 System.out.println(response);
 
-                out.write(writeContent(p));
-                out.flush();
+                send(writeContent(p));
 
                 if(checkResponse(response = in.readLine(), "250 ")){
                     LOG.log(Level.SEVERE, "Réponse attendue : 250 , recue " + response);
@@ -128,18 +129,24 @@ public class SmtpClient {
      */
     private String writeContent(Prank p){
         StringBuilder toReturn = new StringBuilder();
-        toReturn.append("From: ").append(p.getSender().getAddress()).append("\n");
+        toReturn.append("From: ").append(p.getSender().getAddress()).append(CRLF);
 
         for(Person pers : p.getVictims()){
             toReturn.append("To: ").append(pers.getFirstname()).append(" ")
-                    .append(pers.getLastname()).append(" <").append(pers.getAddress()).append(">\n");
+                    .append(pers.getLastname()).append(" <").append(pers.getAddress()).append(">").append(CRLF);
         }
         toReturn.append("Cc: ").append(p.getWitness().getFirstname()).append(" ")
-                .append(p.getWitness().getLastname()).append(" <").append(p.getWitness().getAddress()).append(">\n");
+                .append(p.getWitness().getLastname()).append(" <").append(p.getWitness().getAddress()).append(">").append(CRLF);
 
         toReturn.append(p.getMessage());
 
-        toReturn.append("\r\n.\r\n");
+        toReturn.append(CRLF + "." + CRLF);
         return toReturn.toString();
+    }
+
+    private void send(String message) throws IOException {
+        out.write(message);
+        out.flush();
+        System.out.println(message);
     }
 }
