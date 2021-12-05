@@ -89,7 +89,7 @@ public class ConfigurationManager {
             while((line = victimsFile.readLine()) != null){
                 String[] dotSeparation = line.split("\\.");
                 String atSeparation = dotSeparation[1].split("\\@")[0];
-                victims.add(new Person(dotSeparation[0], atSeparation, line + "\r\n"));
+                victims.add(new Person(dotSeparation[0], atSeparation, line));
             }
         }
         catch(IOException e){

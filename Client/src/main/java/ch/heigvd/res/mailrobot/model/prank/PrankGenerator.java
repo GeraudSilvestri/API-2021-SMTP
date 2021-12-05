@@ -17,10 +17,10 @@ public class PrankGenerator {
     private ConfigurationManager config = null;
     private Random random;
 
-    public PrankGenerator(){
+    public PrankGenerator(ConfigurationManager conf){
         try{
             random = new Random();
-            config = new ConfigurationManager();
+            config = conf;
         }catch(Exception e){
             LOG.log(Level.SEVERE, e.toString());
         }
@@ -58,7 +58,7 @@ public class PrankGenerator {
         if(groupSize >= MIN_GROUP_SIZE) {
             for (int i = 0; i < numGroups; ++i) {
                 Group temp = new Group();
-                for (int j = 0; j < (rest-- > 0 ? 1 : 0); ++j) {
+                for (int j = 0; j < groupSize + (rest-- > 0 ? 1 : 0); ++j) {
                     temp.addMember(victims.get(j + i));
                 }
                 groups.add(temp);
