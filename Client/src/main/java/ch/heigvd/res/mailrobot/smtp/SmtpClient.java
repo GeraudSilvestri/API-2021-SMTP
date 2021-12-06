@@ -131,7 +131,7 @@ public class SmtpClient {
      * @return contenu du mail
      */
     private String writeContent(Prank p){
-        StringBuilder toReturn = new StringBuilder();
+        StringBuilder toReturn = new StringBuilder("Content-Type: text/plain; charset=utf-8" + CRLF);
         toReturn.append("From: ").append(p.getSender().getAddress()).append(CRLF);
 
         for(Person pers : p.getVictims()){
