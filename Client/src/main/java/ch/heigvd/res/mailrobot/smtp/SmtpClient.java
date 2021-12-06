@@ -161,7 +161,7 @@ public class SmtpClient {
         }
 
         toReturn.append("Subject: " + "=?utf-8?B?").append(Base64.getEncoder()
-                .encodeToString(p.getSubject().getBytes(StandardCharsets.UTF_8))).append("?=").append(CRLF);
+                .encodeToString(p.getSubject().getBytes(StandardCharsets.UTF_8))).append("?=").append(CRLF).append(CRLF);
         return toReturn.toString();
     }
 
