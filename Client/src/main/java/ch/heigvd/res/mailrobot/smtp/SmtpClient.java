@@ -25,9 +25,18 @@ public class SmtpClient {
         config = conf;
     }
 
-    public boolean checkResponse(String attendu) throws IOException {
+    private boolean checkResponse(String attendu) throws IOException {
         answer = in.readLine();
-        return answer == null || !answer.startsWith(attendu);
+
+        boolean error = answer == null || !answer.startsWith(attendu);
+
+        if(error){
+            LOG.log(Level.SEVERE, "Réponse attendue : " + attendu + ", recue " + answer);
+            send("QUIT" + CRLF);
+        }
+        else
+            System.out.println(answer);
+        return error;
     }
 
     public int start(){
@@ -47,10 +56,8 @@ public class SmtpClient {
             LOG.log(Level.INFO, "Connected to" + clientSocket);
 
             if (checkResponse("220 ")) {
-                LOG.log(Level.SEVERE, "Réponse attendue : 220 , recue " + answer);
                 return -1;
             }
-            System.out.println(answer);
 
             for (Prank p : pranks) {
                 send("EHLO heig-vd.com" + CRLF);
@@ -60,46 +67,37 @@ public class SmtpClient {
                         break;
                     }
                     if (checkResponse("250")) {
-                        LOG.log(Level.SEVERE, "Réponse attendue : 250-..., recue " + answer);
                         return -1;
                     }
-                    System.out.println(answer);
                 }
                 System.out.println(answer);
 
                 send("MAIL FROM:<" + p.getSender().getAddress() + ">" + CRLF);
                 if(checkResponse("250 ")){
-                    LOG.log(Level.SEVERE, "Réponse attendue : 250 OK , recue " + answer);
                     return -1;
                 }
                 for (Person pers : p.getVictims()) {
                     send("RCPT TO:<" + pers.getAddress() + ">"+ CRLF);
 
                     if (checkResponse("250 ")) {
-                        LOG.log(Level.SEVERE, "Réponse attendue : 250 OK, recue " + answer);
                         return -1;
                     }
-                    System.out.println(answer);
                 }
 
                 send("DATA"+CRLF);
 
                 if(checkResponse("354 ")){
-                    LOG.log(Level.SEVERE, "Réponse attendue : 354 , recue " + answer);
                     return -1;
                 }
-
-                System.out.println(answer);
 
                 send(writeContent(p));
 
                 if(checkResponse("250 ")){
-                    LOG.log(Level.SEVERE, "Réponse attendue : 250 , recue " + answer);
                     return -1;
                 }
-
-                System.out.println(answer);
             }
+            send("QUIT" + CRLF);
+            checkResponse("221");
 
         } catch (IOException e) {
             LOG.log(Level.SEVERE, e.toString(), e);
