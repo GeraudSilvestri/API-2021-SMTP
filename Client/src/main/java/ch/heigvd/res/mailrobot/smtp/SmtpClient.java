@@ -7,6 +7,7 @@ import ch.heigvd.res.mailrobot.model.prank.Prank;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -90,6 +91,7 @@ public class SmtpClient {
                     return -1;
                 }
 
+                send(writeHeader(p));
                 send(writeContent(p));
 
                 if(checkResponse("250 ")){
@@ -132,21 +134,42 @@ public class SmtpClient {
      */
     private String writeContent(Prank p){
         StringBuilder toReturn = new StringBuilder("Content-Type: text/plain; charset=utf-8" + CRLF);
+
+        String[] body = p.getMessage().split("\n");
+        for(int i = 1; i < body.length; i++){
+            toReturn.append(body[i]);
+        }
+
+
+        toReturn.append(CRLF + "." + CRLF);
+        return toReturn.toString();
+    }
+
+    /**
+     * génère le header du message, donc ce qui sera affichée pour les receiver du mail, le sender et le subject
+     * @param p prank contenant les données
+     * @return retourn le header
+     */
+    private String writeHeader(Prank p){
+        StringBuilder toReturn = new StringBuilder("Content-Type: text/plain; charset=utf-8" + CRLF);
         toReturn.append("From: ").append(p.getSender().getAddress()).append(CRLF);
 
         for(Person pers : p.getVictims()){
             toReturn.append("To: ").append(pers.getFirstname()).append(" ")
                     .append(pers.getLastname()).append(" <").append(pers.getAddress()).append(">").append(CRLF);
         }
-        toReturn.append("Cc: ").append(p.getWitness().getFirstname()).append(" ")
-                .append(p.getWitness().getLastname()).append(" <").append(p.getWitness().getAddress()).append(">").append(CRLF);
 
-        toReturn.append(p.getMessage());
-
-        toReturn.append(CRLF + "." + CRLF);
+        String[] subject = p.getMessage().split("\n");
+        toReturn.append("Subject: " + "=?utf-8?B?").append(Base64.getEncoder()
+                .encodeToString(subject[0].getBytes(StandardCharsets.UTF_8))).append("?=").append(CRLF);
         return toReturn.toString();
     }
 
+    /**
+     * envoi le String au serveur mock mock
+     * @param message string a envoyé
+     * @throws IOException renvoi une erreur s'il y a eu un problème pendant l'envoi
+     */
     private void send(String message) throws IOException {
         out.write(message);
         out.flush();
