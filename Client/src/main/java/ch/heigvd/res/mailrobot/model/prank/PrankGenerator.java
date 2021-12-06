@@ -5,6 +5,7 @@ import ch.heigvd.res.mailrobot.model.mail.Group;
 import ch.heigvd.res.mailrobot.model.mail.Person;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,7 +41,9 @@ public class PrankGenerator {
             for (Group g : groups) {
                 temp = random.nextInt(messages.size());
                 message = messages.get(temp);
-                pranks.add(new Prank(g.getMembers(),config.getWitnessesToCc(),message));
+                String subject = message.split("\n")[0];
+                String body = message.substring(message. indexOf('\n')+1);
+                pranks.add(new Prank(g.getMembers(),config.getWitnessesToCc(),body, subject));
             }
         }
         return pranks;

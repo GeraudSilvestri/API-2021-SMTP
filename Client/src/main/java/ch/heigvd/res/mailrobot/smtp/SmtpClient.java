@@ -85,6 +85,14 @@ public class SmtpClient {
                     }
                 }
 
+                if(p.getWitness() != null){
+                    send("RCPT TO:<" + p.getWitness() + ">"+ CRLF);
+
+                    if (checkResponse("250 ")) {
+                        return -1;
+                    }
+                }
+
                 send("DATA"+CRLF);
 
                 if(checkResponse("354 ")){
@@ -133,16 +141,9 @@ public class SmtpClient {
      * @return contenu du mail
      */
     private String writeContent(Prank p){
-        StringBuilder toReturn = new StringBuilder("Content-Type: text/plain; charset=utf-8" + CRLF);
 
-        String[] body = p.getMessage().split("\n");
-        for(int i = 1; i < body.length; i++){
-            toReturn.append(body[i]);
-        }
-
-
-        toReturn.append(CRLF + "." + CRLF);
-        return toReturn.toString();
+        return "Content-Type: text/plain; charset=utf-8" + CRLF + p.getBody() +
+                CRLF + "." + CRLF;
     }
 
     /**
@@ -159,9 +160,8 @@ public class SmtpClient {
                     .append(pers.getLastname()).append(" <").append(pers.getAddress()).append(">").append(CRLF);
         }
 
-        String[] subject = p.getMessage().split("\n");
         toReturn.append("Subject: " + "=?utf-8?B?").append(Base64.getEncoder()
-                .encodeToString(subject[0].getBytes(StandardCharsets.UTF_8))).append("?=").append(CRLF);
+                .encodeToString(p.getSubject().getBytes(StandardCharsets.UTF_8))).append("?=").append(CRLF);
         return toReturn.toString();
     }
 
