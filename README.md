@@ -49,4 +49,4 @@ Dans la capture d'écran ci-dessous, les lignes pointées sont des lignes permet
 ![Exemple de communication](figures/exemple-com.png)
 
 ## Diagramme de classe
-![Diagramme de classe](figures/schema.png)
+![Diagramme de classe](figures/schema-final.png)
