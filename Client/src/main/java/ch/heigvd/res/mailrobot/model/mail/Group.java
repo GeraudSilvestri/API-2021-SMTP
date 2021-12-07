@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Group {
-    private final List<Person> members = new ArrayList<>();
+    private List<Person> members;
 
-    public void addMember(Person p){
-        members.add(p);
+    public Group(List<Person> m){
+        members = m;
     }
 
     public List<Person> getMembers() {

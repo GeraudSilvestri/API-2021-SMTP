@@ -60,11 +60,7 @@ public class PrankGenerator {
         int groupSize = victims.size()/ numGroups;
         if(groupSize >= MIN_GROUP_SIZE) {
             for (int i = 0; i < numGroups; ++i) {
-                Group temp = new Group();
-                for (int j = 0; j < groupSize + (rest-- > 0 ? 1 : 0); ++j) {
-                    temp.addMember(victims.get(j + i));
-                }
-                groups.add(temp);
+                groups.add(new Group(victims.subList(i * numGroups, i * numGroups + groupSize + (i == numGroups - 1 ? rest : 0))));
             }
             return true;
         }else{
