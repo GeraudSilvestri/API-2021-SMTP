@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Group {
-    private List<Person> members;
+    private final List<Person> members;
 
     public Group(List<Person> m){
         members = m;

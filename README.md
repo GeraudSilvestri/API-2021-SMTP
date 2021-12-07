@@ -32,7 +32,7 @@ Le ConfigurationManager va ainsi lire ces fichiers et formater leur contenu pour
 
 
 ## Pranks
-Avant tout, une vérification du nombre de victimes est faite. Il doit y avoir au minimum 3 victimes par groupes. Dans le cas où le nombre de victimes n'est pas un multiple du nombre de groupes, les n premiers groupes créés auront une victime de plus (n correspondant au nombre de victimes modulo le nombre de groupes).
+Avant tout, une vérification du nombre de victimes est faite. Il doit y avoir au minimum 3 victimes par groupes. Dans le cas où le nombre de victimes n'est pas un multiple du nombre de groupes, le dernier groupe créé aura n victimes de plus (n correspondant au nombre de victimes modulo le nombre de groupes).
 
 Une fois les groupes créés, un message aléatoirement selectionné leur est assigné et la première personne du groupe est désignée comme sender.
 
