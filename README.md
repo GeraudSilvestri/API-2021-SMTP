@@ -4,23 +4,32 @@
 Ce projet met à disposition un programme de "Prank" permettant d'envoyer des emails forgés via à un serveur mail MockMock à des groupes d'utilisateurs. 
 
 ## Installation d'un serveur MockMock via Docker
-Après avoir installé Docker, il faut lancer un terminal de commande puis se déplacer dans le dossier DockerConfiguration se trouvant dans ce repo. Ensuite, il faut effectuer la commande **"docker build ."** afin que Docker interprète le fichier dockerFile présent pour créer une image.
+Après avoir installé Docker, il faut lancer un terminal de commande, puis se déplacer dans le dossier DockerConfiguration se trouvant dans ce repo. Ensuite, il faut effectuer la commande **"docker build ."** afin que Docker interprète le fichier dockerFile présent dans le but de créer une image.
 
 Un container Docker ayant un serveur MockMock intallé sera ensuite disponible. Pour le lancer, il faut executer la commande **"docker run -p 8282:8282 -id du container-"**. Grâce au paramètre -p, on indique à Docker que l'on veut mapper le port 8282 de la machine sur le port 8282 du container. Ce port est indispensable car MockMock y fait tourner une interface web qui affiche les pranks créés par notre programme.
 
 L'id de votre container peut être récupéré via la commande **"docker images"**.
 
 ## Utilisation
-Pour utiliser le programme, il suffit juste de modifier les données dans les différents fichiers contenus dans le dossier ressources. Dans le fichier "config.properties", on spécifie le port et l'adresse du serveur smtp ainsi que le nombre de groupe et un témoin. Le témoin étant une personne qui sera en copie de chaque mail envoyé, afin de vérifier que l'envoi a bel et bien était fait. Il ne peut y avoir qu'un seul témoin.
+Pour utiliser le programme, il suffit juste de modifier les données dans les différents fichiers contenus dans le dossier ressources. Dans le fichier **"config.properties"**, on spécifie le port, l'adresse du serveur smtp, le nombre de groupes ainsi qu'un témoin. Le témoin étant une personne qui sera ajoutée en copie de chaque mail envoyé, afin de vérifier que l'envoi a bel et bien été fait. Il ne peut y avoir qu'un seul témoin.
 
-Le fichier "victimes.utf8" contient toutes les personnes qui recevront un mail. Les victimes seront ensuite séparée en différent groupe selon le nombre de groupe spécifié dans le dossier config. La première personne de chaque groupe est désignée comme "sender". Ca sera donc de ladite personne que les mails auront l'air d'être envoyés.
+Le fichier "victimes.utf8" contient toutes les personnes qui recevront un mail. Les victimes seront ensuite séparées en différents groupes selon le nombre de groupes spécifié dans le dossier config. La première personne de chaque groupe est désignée comme "sender". Ca sera donc de ladite personne que les mails auront l'air d'être envoyés.
 
 Le fichier "messages.utf8" contient les différent messages envoyés dans le mail ainsi que le sujet. Le sujet du mail doit être en première ligne. Un message sera assigné aléatoirement à chaque groupe lors de la création des pranks.
 
 ## Choix d'implémentation
 On a choisi de séparer le programme en 3 parties. Une partie s'occupant de la récupération des données, une générant les pranks à partir desdites données et la dernière faisant la connexion au serveur et envoyant les différents mails. La classe "MailRobot" est la classe gérant le programme. 
 
-TODO ajouter ta partie bébou
+## Configuration des données
+Le programme récupère ses informations de 3 fichiers :
+
+- victims.utf8 qui liste les adresses emails utilisées pour l'émetteur et les réceptionneurs des pranks. Les adresses sont formatées pour créer des personnes et donc doivent se formater de la manière suivante : prénom.nom@...
+- messages.utf8 qui stockent le contenu des messages qui sont ensuite envoyés. Il faut indiquer pour chaque message en première ligne le sujet du message sous cette forme : Subject : ...
+Il faut aussi séparer les différents messages par la suite de caractères "==".
+- configure.properties contenant les informations relatives au serveur mail et au témoin qui est ajouté en copie.
+
+Le ConfigurationManager va ainsi lire ces fichiers et formater leur contenu pour l'utiliser dans le reste du programme.
+
 
 ## Pranks
 Avant tout, une vérification du nombre de victimes est faite. Il doit y avoir au minimum 3 victimes par groupes. Dans le cas où le nombre de victimes n'est pas un multiple du nombre de groupes, les n premiers groupes créés auront une victime de plus (n correspondant au nombre de victimes modulo le nombre de groupes).
