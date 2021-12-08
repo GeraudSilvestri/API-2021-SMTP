@@ -6,9 +6,12 @@ Ce projet met à disposition un programme de "Prank" permettant d'envoyer des em
 ## Installation d'un serveur MockMock via Docker
 Après avoir installé Docker, il faut lancer un terminal de commande, puis se déplacer dans le dossier DockerConfiguration se trouvant dans ce repo. Ensuite, il faut effectuer la commande **"docker build ."** afin que Docker interprète le fichier dockerFile présent dans le but de créer une image.
 
-Un container Docker ayant un serveur MockMock intallé sera ensuite disponible. Pour le lancer, il faut executer la commande **"docker run -p 8282:8282 -id du container-"**. Grâce au paramètre -p, on indique à Docker que l'on veut mapper le port 8282 de la machine sur le port 8282 du container. Ce port est indispensable car MockMock y fait tourner une interface web qui affiche les pranks créés par notre programme.
+Un container Docker ayant un serveur MockMock intallé sera ensuite disponible. Pour créer un container utilisant l'image, il faut executer la commande **"docker run -p 8282:8282 -id de l'image-"**. Cette commande, en plus de créer le container, va le lancer. Pour lancer un container existant, il faut executer la commande **"docker run -p 8282:8282 -id du container-"**.
 
-L'id de votre container peut être récupéré via la commande **"docker images"**.
+Grâce au paramètre -p, on indique à Docker que l'on veut mapper le port 8282 de la machine sur le port 8282 du container. Ce port est indispensable car MockMock y fait tourner une interface web qui affiche les pranks créés par notre programme.
+
+L'id de votre image peut être récupéré via la commande **"docker images"**.
+L'id de votre container peut être récupéré via la commande **"docker ps -a"**.
 
 ## Utilisation
 Pour utiliser le programme, il suffit juste de modifier les données dans les différents fichiers contenus dans le dossier ressources. Dans le fichier **"config.properties"**, on spécifie le port, l'adresse du serveur smtp, le nombre de groupes ainsi qu'un témoin. Le témoin étant une personne qui sera ajoutée en copie de chaque mail envoyé, afin de vérifier que l'envoi a bel et bien été fait. Il ne peut y avoir qu'un seul témoin.
